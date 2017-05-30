@@ -13,49 +13,43 @@ indextree newindextree(TInfo a[], int n){
   if (n < 1) return NULL;
 	node* new;
 	new = (node *) malloc(sizeof(node));
-	new -> pivot = NULL;
-	new -> data = a;
-	new -> size = n;
-	new -> left = NULL;
-	new -> right = NULL;
+	new->pivot = NULL;
+	new->data = a;
+	new->size = n;
+	new->left = NULL;
+	new->right = NULL;
 	return new;
 }
 
 int* sorch (indextree t, TInfo x){
   if (t == NULL) return NULL;
-	if (t -> pivot == NULL){
-		TInfo pivot = t -> data[0];
+
+	if (t->pivot == NULL){
+		TInfo pivot = t->data[0];
 		int smaller = less(x , pivot);
 		TInfo* found = NULL;
 		int k = 1;
-    printf("Partitioning & searching ... ");
 		for(int i = 1; i < t->size; i++){
 			if (less(t->data[i], pivot)){
 				swap(&t->data[i], &t->data[k++]);
-			  if(smaller){
-				  if(equal(t->data[k-1], x)){
+			  if(smaller)
+				  if(equal(t->data[k-1], x))
 					  found = &t->data[k-1];
-          }
-        }
-			}
-      if (!smaller){
-				if(equal(t->data[i], x)){
+      }
+      if (!smaller)
+				if(equal(t->data[i], x))
 					found = &t->data[i];
-        }
-			}
-      progress(i, t->size-1);
 		}
-    clearline();
-    
-		swap(&t->data[0], &t->data[k-1]);
-		if(equal(pivot, x))
-			found = &t->data[k-1];
-		else if (found == &t->data[k-1])
-			found = &t->data[0];
 
-		t->pivot = &t->data[k-1];
-		t->left = newindextree(t->data, k-1);
-		t->right = newindextree(&t->data[k], t->size - k);
+		swap(&t->data[0], &t->data[k-1]);
+    t->pivot = &t->data[k-1];
+    t->left = newindextree(t->data, k-1);
+    t->right = newindextree(&t->data[k], t->size - k);
+
+		if(equal(pivot, x))
+			found = t->pivot;
+		else if (found == t->pivot)
+			found = &t->data[0];
 		return found;
 	}
   if (equal(x, *(t->pivot)))

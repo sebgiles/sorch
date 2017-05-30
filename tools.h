@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include "current_utc_time.h"
 
 int less(int a, int b){
   return a < b;
@@ -115,32 +115,38 @@ int* binsearch (TInfo a[], int n, TInfo x) {
 
 // Assegna valori casuali ai primi n elementi del vettore r
 void randomize(int* r, int n, int max){
-  printf("Generating numbers ... ");
   for (int i = 0; i < n; i ++){
     r[i]=rand()%max;
-    progress(i + 1, n);
   }
-  clearline();
+}
+
+void sequence(int* v, int n){
+  for (int i = 0; i < n; i++) {
+    v[i] = i;
+  }
 }
 
 void shuffle(int* v, int n){
-  printf("Generating range ... ");
-  fflush(stdout);
-  for (int i = 0; i < n; i++) {
-    v[i] = i;
-    progress(i + 1,n);
-  }
-  printf("\rShuffling numbers ... ");
-  fflush(stdout);
   int temp;
-  for (int i = n - 1; i >= 0; --i){
+  for (int i = n - 1; i >= 0; -- i){
       int j = rand() % (i+1);
       temp = v[i];
       v[i] = v[j];
       v[j] = temp;
-      progress(n - i, n);
   }
-  clearline();
+}
+
+struct timespec start_time;
+// call this function to start a nanosecond-resolution timer
+void tic(){
+    current_utc_time(&start_time);
+}
+
+// call this function to end a timer, returning nanoseconds elapsed as a long
+unsigned long toc(){
+    struct timespec end_time;
+    current_utc_time(&end_time);
+    return (end_time.tv_nsec - start_time.tv_nsec)/1000;
 }
 
 #endif

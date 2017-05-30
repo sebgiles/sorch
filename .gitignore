@@ -1,6 +1,13 @@
+data/
 
-sorch
+demo
+
+benchmark
+
+interactive
 
 *.log
 
 *.aux
+
+demo
