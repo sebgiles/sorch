@@ -78,7 +78,7 @@ int* sorch (indextree t, TInfo x){
   if (equal(x, *(t->pivot)))
   	return t->pivot;
 
-  //ricorsione
+  //divide et impera
 	if (less(x, *(t->pivot)))
     return sorch(t->left, x);
   else
