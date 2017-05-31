@@ -10,4 +10,6 @@ interactive
 
 *.aux
 
+.latex
+
 demo

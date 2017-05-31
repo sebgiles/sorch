@@ -10,11 +10,9 @@ struct node{
 };
 
 // crea un nuovo nodo per l'albero degli indici
-// forza l'inizializzazione dei campi "data" e "n" per permettere la futura
-// indicizzazione
 // ritorna il puntatore al nodo
 indextree newindextree(TInfo a[], int n){
-  if (n < 1) return NULL; //impedisce la creazione di foglie senza dati
+  if (n < 1) return NULL; //indica una foglia senza dati
 	node* new;
 	new = (node *) malloc(sizeof(node));
 	new->pivot = NULL;
@@ -26,30 +24,23 @@ indextree newindextree(TInfo a[], int n){
 }
 
 // Ricerca l'elemento x nel vettore indicizzato dall'albero t.
-// Ritorna il puntatore all'elemento sul vettore (NULL se assente).
-// La ricerca procede ricorsivamente facendo uso dei pivot dell'albero fino ad
-// arrivarne ad una foglia, a questo punto la ricerca diventa lineare e
-// il blocco interessato viene partizionato simultaneamente usando il primo
-// elemento come pivot.
+// RITORNA: il puntatore all'elemento sul vettore (NULL se assente).
 // POST: - L'albero degli indici ha un nuovo pivot.
-//       - Il vettore viene parzialmente riordinato.
+//       - Il vettore viene partizionato.
 int* sorch (indextree t, TInfo x){
 
-  // ferma la ricorsione alle foglie
-  if (t == NULL) return NULL;
+  if (t == NULL) return NULL; // foglia senza dati ferma la ricorsione
 
-  // pivot non ancora assegnato indica che siamo su una foglia
+  // siamo su una foglia (il blocco deve ancora essere partizionato)
 	if (t->pivot == NULL){
 
-    //scegliamo il primo elemento come pivot
-		TInfo pivot = t->data[0];
+		TInfo pivot = t->data[0]; //scegliamo il primo elemento come pivot
 
-    // sapere se l'elemento cercato è maggiore o minore del pivot ci permette
-    // di ridurre i confronti necessari alla ricerca lineare
+    // sapere se l'elemento cercato sia maggiore o minore del pivot ci
+    // permette di ridurre i confronti necessari alla ricerca lineare
 		int smaller = less(x , pivot);
 
-    // per conservare un puntatore all'eventuale elemento trovato
-		TInfo* found = NULL;
+		TInfo* found = NULL; //puntatore all'eventuale elemento trovato
 
     // il seguente ciclo è identico a quello per il partizionamento del
     // quicksort, con l'aggiunta di confronti per la ricerca di x
@@ -65,11 +56,10 @@ int* sorch (indextree t, TInfo x){
 				if(equal(t->data[i], x))
 					found = &t->data[i];
 		}
-    // posiziona il pivot come separatore
-		swap(&t->data[0], &t->data[k-1]);
+		swap(&t->data[0], &t->data[k-1]); // posiziona il pivot come separatore
+    t->pivot = &t->data[k-1]; // memorizza il puntatore al pivot sul nodo
 
-    // assegna i valori sul nuovo nodo dell'albero degli indici
-    t->pivot = &t->data[k-1];
+    //assegnazione delle partizioni a due nuove foglie
     t->left = newindextree(t->data, k-1);
     t->right = newindextree(&t->data[k], t->size - k);
 
@@ -93,5 +83,4 @@ int* sorch (indextree t, TInfo x){
     return sorch(t->left, x);
   else
     return sorch(t->right, x);
-
 }
